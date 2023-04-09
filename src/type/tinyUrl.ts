@@ -3,6 +3,7 @@ interface TinyUrlType {
   shortUrl: String;
   endTime: Date;
   totalHit: Number;
+  expireAt: Date;
   user: {
     name: String;
     status: String;

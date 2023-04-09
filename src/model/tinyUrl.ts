@@ -18,6 +18,11 @@ const TinyUrlSchema = new mongoose.Schema<TinyUrlType>(
       type: Number,
       default: 0
     },
+    expireAt: {
+      type: Date,
+      // Add 2 hours to the current date and time
+      default: new Date(new Date().getTime() + (2 * 60 * 60 * 1000))
+    },
     user: {
         name: {
             type: String,

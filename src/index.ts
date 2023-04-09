@@ -1,6 +1,7 @@
 import express from 'express'
 import db from './config/db';
 import tinyUrl from './route/tinyUrl'
+import userDb from './route/userDb';
 require("dotenv").config();
 
 db();
@@ -9,6 +10,7 @@ const app = express()
 app.use(express.json());
 
 tinyUrl(app)
+userDb(app)
 
 console.log('Hello world')
 

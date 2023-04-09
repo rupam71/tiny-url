@@ -1,11 +1,27 @@
 import { Express } from "express";
 import TinyUrl from "../model/tinyUrl";
+import sevenDiginUniqueId from "../utils/sevenDiginUniqueId";
 
 export default (app: Express): void => {
   // create tinyUrl
   app.post("/api/tinyUrl", async (req, res) => {
     const longUrl = req.body.longUrl;
-    const shortUrl = new Date().getTime();
+    let shortUrl;
+    let found = true;
+
+    const existedUrl: any = await TinyUrl.find({ longUrl });
+    if (existedUrl.length) return res.status(200).send(existedUrl[0]);
+
+    while(found) {
+      const sixDigitTimestamp:string = (Date.now() - 1681016000000).toString()
+      const sevenDigitRandomValue:string = (Math.floor(Math.random() * 10000000)).toString()
+      
+      const uniqueValue = parseInt(sixDigitTimestamp+sevenDigitRandomValue);
+      shortUrl = sevenDiginUniqueId(uniqueValue);
+
+      const tinyUrl: any = await TinyUrl.find({ shortUrl });
+      if (tinyUrl.length === 0) found = false;
+    }
 
     const newUrl = new TinyUrl({ longUrl, shortUrl });
 
