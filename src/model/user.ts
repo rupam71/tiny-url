@@ -16,9 +16,9 @@ const UserDBSchema = new mongoose.Schema<UserDBType>(
       trim: true,
       unique: true
     },
-    userType: {
+    status: {
       type: String,
-      default: "normal",
+      default: "NORMAL",
       trim: true,
     },
     email: {

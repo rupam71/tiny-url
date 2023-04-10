@@ -1,7 +1,7 @@
 interface UserDBType {
   name: String;
   userID: String;
-  userType: String;
+  status: String;
   email: String;
   password: String;
   totalUrl: Number;
