@@ -4,6 +4,7 @@ import sevenDiginUniqueId from "../utils/sevenDiginUniqueId";
 import noAuth from "../middleware/noAuth";
 import response from "../utils/response";
 import client from "../config/redis";
+import auth from "../middleware/auth";
 
 export default (app: Express): void => {
   // create tinyUrl
@@ -48,8 +49,29 @@ export default (app: Express): void => {
     }
   });
 
+    // get all url for a user
+    app.get("/u", auth, async (req:any, res) => {
+      let allUrl: any
+      
+      const key = `all-url-${req.user.userId}`;
+      const a = await client.get(key).then((res:any) => JSON.parse(res));
+      
+      if (a) {
+        console.log(`get query from cached ${key}`);
+        allUrl = a;
+      } else {
+        allUrl = await TinyUrl.find({ "user.userID": req.user.userId });
+        if (allUrl.length === 0) return response(res,400,"No Url For This User",null)
+        else {
+          await client.set(key,JSON.stringify(allUrl),{EX:300}).then(() => console.log(`set redis cache for ${key} sucess`));
+        }
+      }
+  
+      response(res,200,"All Url Send For This User",allUrl)
+    });
+
   // redirect
-  app.get("/api/:id", async (req, res) => {
+  app.get("/:id", async (req, res) => {
     let tinyUrl: any
     
     const key = `shortUrl-${req.params.id}`;
