@@ -1,19 +1,27 @@
-import express from 'express'
-import db from './config/db';
-import tinyUrl from './route/tinyUrl'
-import userDb from './route/userDb';
+import express from "express";
+import db from "./config/db";
+import tinyUrl from "./route/tinyUrl";
+import userDb from "./route/userDb";
 require("dotenv").config();
 
 db();
 
-const app = express() 
+const app = express();
 app.use(express.json());
 
-tinyUrl(app)
-userDb(app)
+app.get("/", async (req, res) => {
+  res
+    .send({
+      message: "Welcome to tiny url",
+    })
+    .status(200);
+});
 
-console.log('Hello world')
+tinyUrl(app);
+userDb(app);
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT)
-console.log(`Listening at port : ${PORT}`)
+console.log("Hello world");
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT);
+console.log(`Listening at port : ${PORT}`);
