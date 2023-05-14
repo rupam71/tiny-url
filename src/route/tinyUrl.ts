@@ -43,7 +43,7 @@ export default (app: Express): void => {
 
     try {
       await newUrl.save();
-      response(res, 200, "New Url Created", newUrl);
+      response(res, 200, "New Url Created", shortUrl);
     } catch (e) {
       res.status(400).send(e);
     }

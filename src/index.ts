@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import db from "./config/db";
 import tinyUrl from "./route/tinyUrl";
 import userDb from "./route/userDb";
@@ -7,6 +8,7 @@ require("dotenv").config();
 db();
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 app.get("/", async (req, res) => {
