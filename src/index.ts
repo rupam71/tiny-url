@@ -3,6 +3,7 @@ import cors from "cors";
 import db from "./config/db";
 import tinyUrl from "./route/tinyUrl";
 import userDb from "./route/userDb";
+import count from "./route/count";
 require("dotenv").config();
 
 db();
@@ -21,6 +22,7 @@ app.get("/", async (req, res) => {
 
 tinyUrl(app);
 userDb(app);
+count(app)
 
 console.log("Hello world");
 

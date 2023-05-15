@@ -26,7 +26,7 @@ export default (app: Express): void => {
     let found = true;
 
     const existedUrl: any = await TinyUrl.find({ longUrl });
-    if (existedUrl.length) return response(res, 200, "Url Already Exists", existedUrl[0]);
+    if (existedUrl.length) return response(res, 200, "Url Already Exists", existedUrl[0].shortUrl);
 
     while (found) {
       const sixDigitTimestamp: string = (Date.now() - 1681016000000).toString();
