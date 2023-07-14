@@ -1,12 +1,43 @@
-import mongoose from "mongoose"
+import Mongoose from "mongoose";
+import MongodbConfiguration from "./mongodbConfiguration";
+Mongoose.Promise = global.Promise;
+
+Mongoose.connection.on("disconnected", () => {
+  console.error(
+    `!!!!!!!!!! Database Disconnected @ ${MongodbConfiguration.databaseConnection.uri()} !!!!!!!!!!`
+  );
+});
+Mongoose.connection.on("reconnected", () => {
+  console.warn(
+    `!!!!!!!!!! Database Reconnected @ ${MongodbConfiguration.databaseConnection.uri()} !!!!!!!!!!`
+  );
+});
+Mongoose.connection.on("close", () => {
+  console.log("Connection Closed");
+});
+Mongoose.connection.on("error", (err) => {
+  console.error("error", err);
+});
 
 const db = async () => {
-    await mongoose.connect(process.env.MONGO_URI as string).then(res=>{
-        console.log(`MongoDB Conntected At Port ${process.env.MONGO_URI}`)
-    }).catch(error=>{
-        console.log(`MongoDB Not Conntected At Port ${process.env.MONGO_URI}`)
-        console.log(`Someting Wrong In Database Connection.`,error)
-    })
-}
+  await Mongoose.connect(
+    MongodbConfiguration.databaseConnection.uri() as string,
+    {
+      authSource: process.env.MONGO_DB_AUTHDB || "admin",
+      user: process.env.MONGO_DB_USER || "devops",
+      pass: process.env.MONGO_DB_PASSWORD || "devops007",
+    }
+  );
+
+  const db = Mongoose.connection;
+
+  db.on("error", console.error.bind(console, "Connection Error:"));
+
+  db.once("open", () => {
+    console.log(
+      `${process.env.NAME?.toUpperCase()}: Connected to Database @ ${MongodbConfiguration.databaseConnection.uri()}`
+    );
+  });
+};
 
 export default db;
